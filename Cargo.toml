@@ -2,6 +2,8 @@
 name = "ittv_sdk"
 version = "0.1.0"
 edition = "2015"
+description = "A library for interacting with the ITTV API"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
