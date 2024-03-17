@@ -50,6 +50,29 @@ impl Client {
     /// # Errors
     ///
     /// If the request fails, an error is returned.
+    ///
+    /// # Example
+    ///
+    /// ```no_run
+    /// use ittv_sdk::{Client, NewCustomer};
+    ///
+    /// #[tokio::main]
+    /// async fn main() {
+    ///     let client = Client::new("your_api_key");
+    ///     
+    ///     let customer = NewCustomer {
+    ///         name: "John Doe",
+    ///         // ...
+    ///     };
+    ///
+    ///     let response = client
+    ///         .create_customer(customer)
+    ///         .await
+    ///         .unwrap();
+    ///
+    ///     println!("{:?}", response);
+    /// }
+    /// ```
     pub async fn create_customer(&self, body: NewCustomer<'_>) -> Result<Customer, Error> {
         let url = format!("{}/alpha/reseller/customer", self.api_url);
         let client = reqwest::Client::new();

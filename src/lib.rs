@@ -4,7 +4,8 @@
 
 use serde::Deserialize;
 
-pub use crate::customer::create::NewCustomer;
+pub use crate::customer::NewCustomer;
+pub use crate::customer::UpdateCustomer;
 
 mod customer;
 
