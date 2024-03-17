@@ -22,7 +22,7 @@ pub struct NewCustomer<'a> {
 }
 
 /// Represents a customer created in the ITTV API.
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct Customer {
     #[serde(rename = "_id")]
     pub id: String,
@@ -62,7 +62,19 @@ impl Client {
     ///     
     ///     let customer = NewCustomer {
     ///         name: "John Doe",
-    ///         // ...
+    ///         cpf: "",
+    ///         status: "",
+    ///         phone: "",
+    ///         email: "",
+    ///         username: "",
+    ///         password: "",
+    ///         zipcode: "",
+    ///         product: "",
+    ///         address: "",
+    ///         city: "",
+    ///         complement: None,
+    ///         number: "",
+    ///         state: ""
     ///     };
     ///
     ///     let response = client

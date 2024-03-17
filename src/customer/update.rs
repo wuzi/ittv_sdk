@@ -34,12 +34,12 @@ impl Client {
     ///     let client = Client::new("your_api_key");
     ///     
     ///     let customer = UpdateCustomer {
-    ///         email: "new@email.com",
-    ///         // ...
+    ///         email: Some("new@email.com"),
+    ///         username: None,
     ///     };
     ///
     ///     let response = client
-    ///         .update_customer(customer)
+    ///         .update_customer("d6ac4ff04d11", customer)
     ///         .await
     ///         .unwrap();
     ///

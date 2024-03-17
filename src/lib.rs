@@ -26,7 +26,7 @@ impl Client {
 }
 
 /// Generic error response from the ITTV API.
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct Error {
     pub message: String,
 }
