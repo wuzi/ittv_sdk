@@ -2,7 +2,7 @@ use std::error::Error;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{ErrorResponse, IttvSdk};
+use crate::{Client, ErrorResponse};
 
 /// Represents a new customer to be created.
 #[derive(Serialize)]
@@ -38,7 +38,7 @@ enum Response {
     Error(ErrorResponse),
 }
 
-impl IttvSdk {
+impl Client {
     /// Create a new customer in the ITTV API.
     ///
     /// # Arguments

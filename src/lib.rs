@@ -6,18 +6,18 @@ use serde::Deserialize;
 
 mod customer;
 
-pub struct IttvSdk {
+pub struct Client {
     api_key: String,
     api_url: String,
 }
 
-impl IttvSdk {
+impl Client {
     /// Create a new instance of the ITTV SDK.
     #[must_use]
-    pub fn new(api_key: &str, api_url: &str) -> Self {
+    pub fn new(api_key: &str) -> Self {
         Self {
             api_key: api_key.to_string(),
-            api_url: api_url.to_string(),
+            api_url: "https://api-resellers.ittv.com.br".to_string(),
         }
     }
 }
