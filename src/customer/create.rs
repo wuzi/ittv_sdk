@@ -1,8 +1,6 @@
-use std::error::Error;
-
 use serde::{Deserialize, Serialize};
 
-use crate::{Client, ErrorResponse};
+use crate::{Client, Error};
 
 /// Represents a new customer to be created.
 #[derive(Serialize)]
@@ -34,8 +32,8 @@ pub struct Customer {
 #[derive(Deserialize)]
 #[serde(untagged)]
 enum Response {
-    CreatedCustomer(Customer),
-    Error(ErrorResponse),
+    Customer(Customer),
+    Error(Error),
 }
 
 impl Client {
@@ -52,7 +50,7 @@ impl Client {
     /// # Errors
     ///
     /// If the request fails, an error is returned.
-    pub async fn create_customer(&self, body: NewCustomer<'_>) -> Result<Customer, Box<dyn Error>> {
+    pub async fn create_customer(&self, body: NewCustomer<'_>) -> Result<Customer, Error> {
         let url = format!("{}/alpha/reseller/customer", self.api_url);
         let client = reqwest::Client::new();
         let response = client
@@ -65,11 +63,8 @@ impl Client {
             .await?;
 
         match response {
-            Response::CreatedCustomer(customer) => Ok(customer),
-            Response::Error(e) => Err(Box::new(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                e.message,
-            ))),
+            Response::Customer(customer) => Ok(customer),
+            Response::Error(e) => Err(e),
         }
     }
 }

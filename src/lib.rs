@@ -26,6 +26,14 @@ impl Client {
 
 /// Generic error response from the ITTV API.
 #[derive(Deserialize)]
-pub struct ErrorResponse {
+pub struct Error {
     pub message: String,
+}
+
+impl From<reqwest::Error> for Error {
+    fn from(error: reqwest::Error) -> Self {
+        Self {
+            message: error.to_string(),
+        }
+    }
 }
