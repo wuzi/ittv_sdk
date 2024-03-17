@@ -33,3 +33,5 @@ async fn main() {
     println!("{:?}", response);
 }
 ```
+
+Check the [documentation](https://docs.rs/ittv_sdk/latest/ittv_sdk/struct.Client.html) for more examples.
