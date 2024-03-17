@@ -25,7 +25,7 @@ pub struct NewCustomer<'a> {
 
 /// Represents a customer created in the ITTV API.
 #[derive(Deserialize)]
-pub struct CreatedCustomer {
+pub struct Customer {
     #[serde(rename = "_id")]
     pub id: String,
 }
@@ -34,7 +34,7 @@ pub struct CreatedCustomer {
 #[derive(Deserialize)]
 #[serde(untagged)]
 enum Response {
-    CreatedCustomer(CreatedCustomer),
+    CreatedCustomer(Customer),
     Error(ErrorResponse),
 }
 
@@ -52,10 +52,7 @@ impl Client {
     /// # Errors
     ///
     /// If the request fails, an error is returned.
-    pub async fn create_customer(
-        &self,
-        body: NewCustomer<'_>,
-    ) -> Result<CreatedCustomer, Box<dyn Error>> {
+    pub async fn create_customer(&self, body: NewCustomer<'_>) -> Result<Customer, Box<dyn Error>> {
         let url = format!("{}/alpha/reseller/customer", self.api_url);
         let client = reqwest::Client::new();
         let response = client

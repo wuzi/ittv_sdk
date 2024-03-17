@@ -8,7 +8,7 @@ Add the following to your `Cargo.toml` file:
 
 ```toml
 [dependencies]
-ittv_sdk = "0.1.0"
+ittv_sdk = "0.1"
 ```
 
 ## Usage

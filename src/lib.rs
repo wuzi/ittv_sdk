@@ -4,6 +4,8 @@
 
 use serde::Deserialize;
 
+pub use crate::customer::create::NewCustomer;
+
 mod customer;
 
 pub struct Client {
