@@ -23,6 +23,11 @@ impl Client {
             api_url: "https://api-resellers.ittv.com.br".to_string(),
         }
     }
+    
+    pub fn with_url(mut self, api_url: &str) -> Self {
+        self.api_url = api_url.to_string();
+        self
+    }
 }
 
 /// Generic error response from the ITTV API.

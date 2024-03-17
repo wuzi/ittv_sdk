@@ -103,3 +103,46 @@ impl Client {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn create_customer() {
+        let client = Client::new("your_api_key");
+        let mut ittv = mockito::Server::new_async().await;
+
+        ittv
+            .mock("POST", "/alpha/reseller/customer")
+            .match_header("Authorization", "Bearer your_api_key")
+            .with_status(200)
+            .with_body(r#"{"_id":"5f5e7e3b3f3b3b3b3b3b3b3b"}"#)
+            .create();
+
+        let customer = NewCustomer {
+            name: "John Doe",
+            cpf: "",
+            status: "",
+            phone: "",
+            email: "",
+            username: "",
+            password: "",
+            zipcode: "",
+            product: "",
+            address: "",
+            city: "",
+            complement: None,
+            number: "",
+            state: "",
+        };
+
+        let response = client
+            .with_url(ittv.url().as_str())
+            .create_customer(customer)
+            .await
+            .unwrap();
+
+        assert_eq!(response.id, "5f5e7e3b3f3b3b3b3b3b3b3b");
+    }
+}
