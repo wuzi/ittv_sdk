@@ -11,7 +11,7 @@ mod customer;
 
 pub struct Client {
     api_key: String,
-    api_url: String,
+    pub api_url: String,
 }
 
 impl Client {
