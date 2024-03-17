@@ -14,11 +14,11 @@ ittv_sdk = "0.1"
 ## Usage
 
 ```rust
-use ittv_sdk::Client;
+use ittv_sdk::{Client, NewCustomer};
 
 #[tokio::main]
 async fn main() {
-    let client = Client::new("your_api_key").unwrap();
+    let client = Client::new("your_api_key");
     
     let customer = NewCustomer {
         name: "John Doe",
