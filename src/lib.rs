@@ -11,7 +11,7 @@ mod customer;
 
 pub struct Client {
     api_key: String,
-    pub api_url: String,
+    api_url: String,
 }
 
 impl Client {
@@ -22,6 +22,11 @@ impl Client {
             api_key: api_key.to_string(),
             api_url: "https://api-resellers.ittv.com.br".to_string(),
         }
+    }
+    
+    pub fn with_url(mut self, api_url: &str) -> Self {
+        self.api_url = api_url.to_string();
+        self
     }
 }
 

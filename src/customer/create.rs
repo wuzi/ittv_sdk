@@ -111,14 +111,11 @@ mod tests {
     #[tokio::test]
     async fn create_customer() {
         let client = Client::new("your_api_key");
-        
-        mockito::Server::new_async()
-            .await
-            .mock(
-                "POST",
-                format!("{}/alpha/reseller/customer", client.api_url).as_str(),
-            )
-            // .match_header("Authorization", "Bearer your_api_key")
+        let mut ittv = mockito::Server::new_async().await;
+
+        ittv
+            .mock("POST", "/alpha/reseller/customer")
+            .match_header("Authorization", "Bearer your_api_key")
             .with_status(200)
             .with_body(r#"{"_id":"5f5e7e3b3f3b3b3b3b3b3b3b"}"#)
             .create();
@@ -140,7 +137,12 @@ mod tests {
             state: "",
         };
 
-        let response = client.create_customer(customer).await.unwrap();
+        let response = client
+            .with_url(ittv.url().as_str())
+            .create_customer(customer)
+            .await
+            .unwrap();
+
         assert_eq!(response.id, "5f5e7e3b3f3b3b3b3b3b3b3b");
     }
 }
