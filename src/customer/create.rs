@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{ErrorResponse, IttvSdk};
 
+/// Represents a new customer to be created.
 #[derive(Serialize)]
 pub struct NewCustomer<'a> {
     pub name: &'a str,
@@ -22,12 +23,14 @@ pub struct NewCustomer<'a> {
     pub state: &'a str,
 }
 
+/// Represents a customer created in the ITTV API.
 #[derive(Deserialize)]
 pub struct CreatedCustomer {
     #[serde(rename = "_id")]
     pub id: String,
 }
 
+/// Represents the response from the ITTV API when creating a customer.
 #[derive(Deserialize)]
 #[serde(untagged)]
 enum Response {
@@ -36,6 +39,19 @@ enum Response {
 }
 
 impl IttvSdk {
+    /// Create a new customer in the ITTV API.
+    ///
+    /// # Arguments
+    ///
+    /// * `body` - The new customer to be created.
+    ///
+    /// # Returns
+    ///
+    /// The created customer.
+    ///
+    /// # Errors
+    ///
+    /// If the request fails, an error is returned.
     pub async fn create_customer(
         &self,
         body: NewCustomer<'_>,
