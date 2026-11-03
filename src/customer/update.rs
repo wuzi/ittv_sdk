@@ -51,21 +51,12 @@ impl Client {
         customer_id: &str,
         dto: UpdateCustomer<'_>,
     ) -> Result<(), Error> {
-        let url = format!("{}/alpha/reseller/customer/{}", self.api_url, customer_id);
-
-        let client = reqwest::Client::new();
-        let response = client
-            .put(&url)
-            .header("Authorization", format!("Bearer {}", self.api_key))
-            .json(&json!({ "username": dto.username, "email": dto.email }))
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            return Ok(());
-        }
-
-        let result = response.json::<Error>().await?;
-        Err(result)
+        self.send_unit(
+            reqwest::Method::PUT,
+            customer_id,
+            None,
+            &json!({ "username": dto.username, "email": dto.email }),
+        )
+        .await
     }
 }

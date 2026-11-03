@@ -86,16 +86,9 @@ impl Client {
     /// }
     /// ```
     pub async fn create_customer(&self, body: NewCustomer<'_>) -> Result<Customer, Error> {
-        let url = format!("{}/alpha/reseller/customer", self.api_url);
-        let client = reqwest::Client::new();
-        let response = client
-            .post(&url)
-            .header("Authorization", format!("Bearer {}", self.api_key))
-            .json(&body)
-            .send()
-            .await?
-            .json::<Response>()
-            .await?;
+        let bytes = self.send(reqwest::Method::POST, None, None, &body).await?;
+        let response = serde_json::from_slice::<Response>(&bytes)
+            .map_err(|_| Error::local("Invalid ITTV customer response"))?;
 
         match response {
             Response::Customer(customer) => Ok(customer),
@@ -113,8 +106,7 @@ mod tests {
         let client = Client::new("your_api_key");
         let mut ittv = mockito::Server::new_async().await;
 
-        ittv
-            .mock("POST", "/alpha/reseller/customer")
+        ittv.mock("POST", "/alpha/reseller/customer")
             .match_header("Authorization", "Bearer your_api_key")
             .with_status(200)
             .with_body(r#"{"_id":"5f5e7e3b3f3b3b3b3b3b3b3b"}"#)
