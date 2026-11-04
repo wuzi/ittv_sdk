@@ -1,6 +1,6 @@
 [package]
 name = "ittv_sdk"
-version = "0.1.4"
+version = "0.2.0"
 edition = "2021"
 description = "A library for interacting with the ITTV API"
 license = "MIT"
@@ -8,10 +8,10 @@ license = "MIT"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-reqwest = { version = "0.11.26", features = ["json"] }
+reqwest = { version = "0.12.28", features = ["json"] }
 serde = { version = "1.0.197", features = ["derive"] }
 serde_json = { version = "1.0.114" }
 
 [dev-dependencies]
 mockito = { version = "1.4.0" }
-tokio = { version = "1.36.0", features = ["rt", "rt-multi-thread", "macros"] }
+tokio = { version = "1.36.0", features = ["rt", "rt-multi-thread", "macros", "net", "io-util", "sync", "time"] }

@@ -40,24 +40,12 @@ impl Client {
         customer_id: &str,
         product_id: &str,
     ) -> Result<(), Error> {
-        let url = format!(
-            "{}/alpha/reseller/customer/{}/order",
-            self.api_url, customer_id
-        );
-
-        let client = reqwest::Client::new();
-        let response = client
-            .put(&url)
-            .header("Authorization", format!("Bearer {}", self.api_key))
-            .json(&json!({ "idProduct": product_id }))
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            return Ok(());
-        }
-
-        let result = response.json::<Error>().await?;
-        Err(result)
+        self.send_unit(
+            reqwest::Method::PUT,
+            customer_id,
+            Some("order"),
+            &json!({ "idProduct": product_id }),
+        )
+        .await
     }
 }

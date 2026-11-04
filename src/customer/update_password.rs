@@ -39,24 +39,12 @@ impl Client {
         customer_id: &str,
         password: &str,
     ) -> Result<(), Error> {
-        let url = format!(
-            "{}/alpha/reseller/customer/{}/changepassword",
-            self.api_url, customer_id
-        );
-
-        let client = reqwest::Client::new();
-        let response = client
-            .post(&url)
-            .header("Authorization", format!("Bearer {}", self.api_key))
-            .json(&json!({ "password": password }))
-            .send()
-            .await?;
-
-        if response.status().is_success() {
-            return Ok(());
-        }
-
-        let result = response.json::<Error>().await?;
-        Err(result)
+        self.send_unit(
+            reqwest::Method::POST,
+            customer_id,
+            Some("changepassword"),
+            &json!({ "password": password }),
+        )
+        .await
     }
 }
