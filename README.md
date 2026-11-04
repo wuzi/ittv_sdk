@@ -43,6 +43,9 @@ connection timeout and a 30-second total deadline, including response-body reads
 Redirects and automatic retries are disabled. A timeout or disconnected response
 can leave a mutation's completion uncertain; reconcile with the provider before
 submitting it again.
+Creation also rejects a successful response whose customer ID is empty, `.` or
+`..`. A rejected response may still mean the provider created a customer;
+reconcile externally before retrying creation.
 
 Successful and failed response bodies are limited to 1 MiB (1,048,576 bytes),
 checked both against declared length and while reading streamed bodies. The SDK

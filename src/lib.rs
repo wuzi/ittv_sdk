@@ -18,6 +18,10 @@ mod customer;
 #[cfg(test)]
 mod transport_tests;
 
+pub(crate) fn usable_customer_id(id: &str) -> bool {
+    !matches!(id, "" | "." | "..")
+}
+
 /// An ITTV API client with one shared, bounded HTTP connection pool.
 ///
 /// Initialization and base URL validation errors are retained and returned by
@@ -100,7 +104,7 @@ impl Client {
             .as_ref()
             .map_err(|error| Error::local(&error.message))?
             .clone();
-        if customer_id.is_some_and(|id| matches!(id, "" | "." | "..")) {
+        if customer_id.is_some_and(|id| !usable_customer_id(id)) {
             return Err(Error::local("Invalid ITTV customer ID"));
         }
         {
