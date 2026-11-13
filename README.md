@@ -14,54 +14,28 @@ ittv_sdk = "0.2"
 ## Usage
 
 ```rust
-use ittv_sdk::{Client, NewCustomer};
+use ittv_sdk::Client;
 
-#[tokio::main]
-async fn main() {
-    let client = Client::new("your_api_key");
-    
-    let customer = NewCustomer {
-        name: "John Doe",
-        // ...
-    };
-
-    let response = client
-        .create_customer(customer)
-        .await
-        .unwrap();
-
-    println!("{:?}", response);
-}
+let client = Client::new("your_api_key");
 ```
 
-Check the [documentation](https://docs.rs/ittv_sdk/latest/ittv_sdk/struct.Client.html) for more examples.
+Use `NewCustomer` with `Client::create_customer` and `UpdateCustomer` with
+`Client::update_customer`; password, product and status updates have dedicated
+methods. See the [client reference](https://docs.rs/ittv_sdk/latest/ittv_sdk/struct.Client.html)
+and the [complete creation example](src/customer/create.rs) for required fields.
 
 ## Transport behavior
 
-A `Client` keeps one reusable HTTP connection pool. Each request has a 5-second
-connection timeout and a 30-second total deadline, including response-body reads.
-Redirects and automatic retries are disabled. A timeout or disconnected response
-can leave a mutation's completion uncertain; reconcile with the provider before
-submitting it again.
+A client reuses one connection pool, with a 5-second connect timeout, 30-second
+request deadline (including body reads), and 1 MiB response limit. Redirects and
+automatic retries are disabled. Reconcile an uncertain mutation with the provider
+before resubmitting it; a timeout does not prove failure.
 
-Successful and failed response bodies are limited to 1 MiB (1,048,576 bytes),
-checked both against declared length and while reading streamed bodies. The SDK
-supports a customer ID response and provider message responses, with no list API;
-this ceiling is generous for those shapes and the checked local fixtures. Unit
-updates accept ordinary 2xx responses, including 204/empty bodies, under the same
-size and deadline limits. Creation requires a successful HTTP status and a valid
-customer response; a failed status cannot become success merely because its body
-contains an `_id`. Existing provider error messages are preserved.
-
-`Client::new` and `with_url` remain infallible. Initialization or base URL errors
-are retained and reported by operations without sending a request or falling back
-to an unbounded transport. `with_url` accepts HTTP/HTTPS bases with an optional
-base path and trailing slash; operation paths are appended to that base path.
-URL credentials, query strings and fragments are rejected. Customer IDs are opaque
-single path segments: reserved characters and percent signs are encoded once;
-empty IDs, `.` and `..` are rejected before sending. Values such as `...` remain
-valid opaque IDs. Transport errors omit the request URL. The SDK does not add API keys or request
-payloads to diagnostic text; provider error messages are retained verbatim.
+`with_url` accepts an HTTP(S) base with an optional path; operation paths append
+to it. Credentials, queries and fragments in the base are rejected. Customer IDs
+are opaque path segments; empty IDs and literal `.`/`..` are invalid. Constructor
+or base URL errors surface on operations before dispatch. Provider error messages
+are retained verbatim, so apply the caller's disclosure policy.
 
 ## Migrating from 0.1
 
@@ -72,8 +46,6 @@ must migrate that dependency or handle the conversion themselves. The SDK's
 `Client::new`, `with_url`, five customer operations, DTO fields and public
 `Error { message }` shape remain available. No legacy reqwest stack is retained.
 
-Before releasing, validate the reviewed source and lockfile with tests, doctests,
-Clippy, formatting, a frozen RustSec audit, package verification and an exact
-package consumer check. API adoption must explicitly select `ittv_sdk = "0.2"`;
-local source edits do not update a registry consumer. Publication, package
-provenance and consumer adoption are separate release gates.
+API adoption must explicitly select `ittv_sdk = "0.2"`; editing this checkout does
+not update a registry consumer. Publication and downstream adoption are separate
+release steps.
