@@ -91,7 +91,8 @@ impl Client {
             .map_err(|_| Error::local("Invalid ITTV customer response"))?;
 
         match response {
-            Response::Customer(customer) => Ok(customer),
+            Response::Customer(customer) if crate::usable_customer_id(&customer.id) => Ok(customer),
+            Response::Customer(_) => Err(Error::local("Invalid ITTV customer response")),
             Response::Error(e) => Err(e),
         }
     }

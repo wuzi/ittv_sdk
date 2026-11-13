@@ -143,6 +143,9 @@ async fn creation_response_contracts() {
         (400, "", "ITTV request failed with HTTP status 400"),
         (200, "", "Invalid ITTV customer response"),
         (200, "{", "Invalid ITTV customer response"),
+        (200, r#"{"_id":""}"#, "Invalid ITTV customer response"),
+        (200, r#"{"_id":"."}"#, "Invalid ITTV customer response"),
+        (200, r#"{"_id":".."}"#, "Invalid ITTV customer response"),
     ] {
         let mut server = mockito::Server::new_async().await;
         let request = server

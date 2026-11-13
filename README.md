@@ -30,6 +30,8 @@ A client reuses one connection pool, with a 5-second connect timeout, 30-second
 request deadline (including body reads), and 1 MiB response limit. Redirects and
 automatic retries are disabled. Reconcile an uncertain mutation with the provider
 before resubmitting it; a timeout does not prove failure.
+Creation rejects responses whose customer ID is empty, `.` or `..`; reconcile with
+the provider before retrying because the customer may still have been created.
 
 `with_url` accepts an HTTP(S) base with an optional path; operation paths append
 to it. Credentials, queries and fragments in the base are rejected. Customer IDs
